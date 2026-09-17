@@ -974,7 +974,7 @@ export const RepairBookingsManager: React.FC<RepairBookingsManagerProps> = ({
                     </label>
                     <input
                       type="text"
-                      placeholder="e.g. 9857039988"
+                      placeholder="e.g. 9847460603"
                       value={editTechnicianPhone}
                       onChange={(e) => setEditTechnicianPhone(e.target.value)}
                       className="w-full px-3 py-2 bg-white border border-amber-300 rounded-xl text-xs font-mono font-bold text-amber-950"

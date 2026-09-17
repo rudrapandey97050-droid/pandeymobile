@@ -47,8 +47,8 @@ export const UpcomingModelsPage: React.FC<UpcomingModelsPageProps> = ({
   const [copiedLink, setCopiedLink] = useState(false);
 
   const currentSettings = storeSettings || DataStorageService.getStoreSettings();
-  const phone = currentSettings.phone1 || '9857039988';
-  const rawWa = currentSettings.whatsapp || currentSettings.phone1 || '9857039988';
+  const phone = currentSettings.phone1 || '9847460603';
+  const rawWa = currentSettings.whatsapp || currentSettings.phone1 || '9847460603';
   const cleanWa = rawWa.replace(/[^0-9]/g, '');
   const finalWa = cleanWa.startsWith('977') ? cleanWa : `977${cleanWa}`;
 

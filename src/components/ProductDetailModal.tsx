@@ -66,7 +66,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
   const isOutOfStock = product.availability === 'Out of Stock' || product.availability === 'Sold Out';
 
   const storeSettings = DataStorageService.getStoreSettings();
-  const rawWa = storeSettings.whatsapp || storeSettings.phone1 || '9857039988';
+  const rawWa = storeSettings.whatsapp || storeSettings.phone1 || '9847460603';
   const cleanWa = rawWa.replace(/[^0-9]/g, '');
   const finalWa = cleanWa.startsWith('977') ? cleanWa : `977${cleanWa}`;
 

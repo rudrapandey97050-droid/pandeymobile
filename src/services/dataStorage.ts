@@ -339,7 +339,28 @@ export class DataStorageService {
     try {
       const data = localStorage.getItem(STORAGE_KEYS.STORE_SETTINGS);
       if (data) {
-        return JSON.parse(data);
+        const parsed = JSON.parse(data);
+        let modified = false;
+        if (!parsed.technicianPhone || parsed.technicianPhone === '9857039988') {
+          parsed.technicianPhone = '9847460603';
+          modified = true;
+        }
+        if (parsed.phone1 === '9857039988') {
+          parsed.phone1 = '9847460603';
+          modified = true;
+        }
+        if (parsed.whatsapp === '9857039988') {
+          parsed.whatsapp = '9847460603';
+          modified = true;
+        }
+        if (modified) {
+          try {
+            localStorage.setItem(STORAGE_KEYS.STORE_SETTINGS, JSON.stringify(parsed));
+          } catch (e) {
+            // ignore
+          }
+        }
+        return parsed;
       }
     } catch (e) {
       console.error('Error reading store settings', e);

@@ -416,7 +416,7 @@ export const StoreSettingsManager: React.FC<StoreSettingsManagerProps> = ({
                     value={formData.technicianPhone || ''}
                     onChange={(e) => setFormData({ ...formData, technicianPhone: e.target.value })}
                     className="w-full px-3.5 py-2.5 bg-white border border-amber-300 rounded-xl text-xs font-mono font-bold text-amber-950 focus:border-amber-500 focus:outline-hidden"
-                    placeholder="e.g. 9857039988 / 9804477123"
+                    placeholder="e.g. 9847460603 / 9804477123"
                   />
                 </div>
               </div>

@@ -25,7 +25,7 @@ export const PreOrderBookingModal: React.FC<PreOrderBookingModalProps> = ({
   const [orderId, setOrderId] = useState('');
 
   const storeSettings = DataStorageService.getStoreSettings();
-  const rawWa = storeSettings.whatsapp || storeSettings.phone1 || '9857039988';
+  const rawWa = storeSettings.whatsapp || storeSettings.phone1 || '9847460603';
   const cleanWa = rawWa.replace(/[^0-9]/g, '');
   const finalWa = cleanWa.startsWith('977') ? cleanWa : `977${cleanWa}`;
 

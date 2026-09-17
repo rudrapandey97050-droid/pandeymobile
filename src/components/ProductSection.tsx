@@ -125,7 +125,7 @@ export const ProductSection: React.FC<ProductSectionProps> = ({
             </div>
             <div className="pt-2 flex flex-wrap items-center justify-center gap-2 text-xs text-slate-500">
               <span className="px-3 py-1 bg-slate-100 rounded-full font-medium">📍 {storeSettings?.address || 'Traffic Chowk'}, {storeSettings?.city || 'Butwal'}</span>
-              <span className="px-3 py-1 bg-slate-100 rounded-full font-medium">📞 {storeSettings?.phone1 || '9857039988'}</span>
+              <span className="px-3 py-1 bg-slate-100 rounded-full font-medium">📞 {storeSettings?.phone1 || '9847460603'}</span>
             </div>
           </div>
         ) : filteredProducts.length === 0 ? (

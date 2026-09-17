@@ -50,6 +50,7 @@ const DEFAULT_PASSWORDS = [
   'pandey',
   'admin',
   'password',
+  '9847460603',
   '9857039988',
   'pmesbutwal',
   'butwal123',
