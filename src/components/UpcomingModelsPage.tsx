@@ -46,6 +46,12 @@ export const UpcomingModelsPage: React.FC<UpcomingModelsPageProps> = ({
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [copiedLink, setCopiedLink] = useState(false);
 
+  const currentSettings = storeSettings || DataStorageService.getStoreSettings();
+  const phone = currentSettings.phone1 || '9857039988';
+  const rawWa = currentSettings.whatsapp || currentSettings.phone1 || '9857039988';
+  const cleanWa = rawWa.replace(/[^0-9]/g, '');
+  const finalWa = cleanWa.startsWith('977') ? cleanWa : `977${cleanWa}`;
+
   useEffect(() => {
     const all = DataStorageService.getUpcomingModels().filter(m => m.isActive);
     all.sort((a, b) => (a.displayOrder || 0) - (b.displayOrder || 0));
@@ -281,7 +287,7 @@ export const UpcomingModelsPage: React.FC<UpcomingModelsPageProps> = ({
                   </button>
 
                   <a
-                    href={`https://wa.me/9779857039401?text=${encodeURIComponent(`Namaste Pandey Mobile Store, I am interested in pre-booking the upcoming ${selectedModel.name}. Please notify me when stocks arrive.`)}`}
+                    href={`https://wa.me/${finalWa}?text=${encodeURIComponent(`Namaste ${currentSettings.storeName}, I am interested in pre-booking the upcoming ${selectedModel.name}. Please notify me when stocks arrive.`)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center justify-center space-x-2 px-6 py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-bold rounded-2xl shadow-lg shadow-emerald-600/20 transition-colors"
@@ -500,13 +506,13 @@ export const UpcomingModelsPage: React.FC<UpcomingModelsPageProps> = ({
 
               <div className="flex items-center space-x-3">
                 <a
-                  href="tel:9857039401"
+                  href={`tel:${phone}`}
                   className="px-5 py-2.5 bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold rounded-xl transition"
                 >
-                  Call 9857039401
+                  Call {phone}
                 </a>
                 <a
-                  href="https://wa.me/9779857039401"
+                  href={`https://wa.me/${finalWa}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl transition shadow-md"

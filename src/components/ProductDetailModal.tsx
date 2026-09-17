@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { Product, ProductVariant } from '../types.ts';
 import { formatNPR } from '../utils/formatters.ts';
+import { DataStorageService } from '../services/dataStorage.ts';
 
 interface ProductDetailModalProps {
   product: Product | null;
@@ -63,6 +64,11 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
   const isApple = product.brand.toLowerCase() === 'apple' || product.category.toLowerCase() === 'iphone';
   const isPreOwned = product.condition === 'Used' || product.condition === 'Pre-Owned' || product.condition === 'Refurbished';
   const isOutOfStock = product.availability === 'Out of Stock' || product.availability === 'Sold Out';
+
+  const storeSettings = DataStorageService.getStoreSettings();
+  const rawWa = storeSettings.whatsapp || storeSettings.phone1 || '9857039988';
+  const cleanWa = rawWa.replace(/[^0-9]/g, '');
+  const finalWa = cleanWa.startsWith('977') ? cleanWa : `977${cleanWa}`;
 
   // Variants handling
   const variants: ProductVariant[] = product.variants && product.variants.length > 0
@@ -411,8 +417,8 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
 
           <div className="flex items-center space-x-2 w-full sm:w-auto">
             <a
-              href={`https://wa.me/9779857039988?text=${encodeURIComponent(
-                `Hello Pandey Mobile Store, I want to inquire/purchase ${product.name} (${selectedVariant.storage || ''} ${selectedColor || ''}) priced at ${formatNPR(currentPrice)}.`
+              href={`https://wa.me/${finalWa}?text=${encodeURIComponent(
+                `Hello ${storeSettings.storeName}, I want to inquire/purchase ${product.name} (${selectedVariant.storage || ''} ${selectedColor || ''}) priced at ${formatNPR(currentPrice)}.`
               )}`}
               target="_blank"
               rel="noopener noreferrer"

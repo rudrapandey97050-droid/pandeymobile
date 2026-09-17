@@ -208,7 +208,7 @@ export const RepairBookingsManager: React.FC<RepairBookingsManagerProps> = ({
     if (b.notes) {
       msg += `• Lab Notes: ${b.notes}\n`;
     }
-    msg += `\nPlease feel free to reply or visit our store at Traffic Chowk, Butwal. Phone: 9857039988.`;
+    msg += `\nPlease feel free to reply or visit our store at ${storeSettings.address}, ${storeSettings.city}. Phone: ${storeSettings.technicianPhone || storeSettings.phone1}.`;
     return encodeURIComponent(msg);
   };
 

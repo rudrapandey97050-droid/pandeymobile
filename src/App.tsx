@@ -403,6 +403,7 @@ export const App: React.FC = () => {
           initialService={repairInitialService}
           initialTab={repairInitialTab}
           initialTrackingCode={repairInitialTrackingCode}
+          storeSettings={storeSettings}
           onClose={() => setIsRepairModalOpen(false)}
           onSuccess={refreshData}
         />

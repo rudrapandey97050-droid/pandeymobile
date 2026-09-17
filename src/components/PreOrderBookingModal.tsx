@@ -24,6 +24,11 @@ export const PreOrderBookingModal: React.FC<PreOrderBookingModalProps> = ({
   const [submitted, setSubmitted] = useState(false);
   const [orderId, setOrderId] = useState('');
 
+  const storeSettings = DataStorageService.getStoreSettings();
+  const rawWa = storeSettings.whatsapp || storeSettings.phone1 || '9857039988';
+  const cleanWa = rawWa.replace(/[^0-9]/g, '');
+  const finalWa = cleanWa.startsWith('977') ? cleanWa : `977${cleanWa}`;
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!customerName || !phoneNumber) {
@@ -95,13 +100,13 @@ export const PreOrderBookingModal: React.FC<PreOrderBookingModalProps> = ({
               </div>
               <div className="flex justify-between">
                 <span className="text-slate-500">Pickup Location:</span>
-                <span className="font-semibold text-slate-800">Traffic Chowk, Butwal</span>
+                <span className="font-semibold text-slate-800">{storeSettings.address}, {storeSettings.city}</span>
               </div>
             </div>
 
             <div className="pt-2 flex flex-col sm:flex-row gap-2">
               <a
-                href={`https://wa.me/9779857039988?text=Hello%20Pandey%20Mobile%20Store%2C%20I%20have%20placed%20order%20for%20${encodeURIComponent(product.name)}%20(Order%20ID%3A%20${orderId}).`}
+                href={`https://wa.me/${finalWa}?text=Hello%20${encodeURIComponent(storeSettings.storeName)}%2C%20I%20have%20placed%20order%20for%20${encodeURIComponent(product.name)}%20(Order%20ID%3A%20${orderId}).`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl text-center"

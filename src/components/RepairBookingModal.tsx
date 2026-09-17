@@ -26,7 +26,7 @@ import {
   Info
 } from 'lucide-react';
 import { DataStorageService } from '../services/dataStorage.ts';
-import { RepairBooking, RepairStatus } from '../types.ts';
+import { RepairBooking, RepairStatus, StoreSettings } from '../types.ts';
 import { formatNPR } from '../utils/formatters.ts';
 
 interface RepairBookingModalProps {
@@ -35,6 +35,7 @@ interface RepairBookingModalProps {
   initialTrackingCode?: string;
   onClose: () => void;
   onSuccess: () => void;
+  storeSettings?: StoreSettings;
 }
 
 const COMMON_BRANDS = [
@@ -157,7 +158,7 @@ const STATUS_INFO: Record<RepairStatus, {
     badgeBg: 'bg-rose-100 border-rose-300',
     badgeText: 'text-rose-900',
     description: 'This repair request was cancelled or closed upon customer request.',
-    actionHint: 'Contact us at 9857039988 if you need any assistance.'
+    actionHint: 'Contact our service lab if you need any assistance.'
   }
 };
 
@@ -166,8 +167,15 @@ export const RepairBookingModal: React.FC<RepairBookingModalProps> = ({
   initialTab = 'book',
   initialTrackingCode = '',
   onClose,
-  onSuccess
+  onSuccess,
+  storeSettings
 }) => {
+  const currentSettings = storeSettings || DataStorageService.getStoreSettings();
+  const labHotline = currentSettings.technicianPhone || currentSettings.phone1 || '9857039988';
+  const rawWa = currentSettings.whatsapp || currentSettings.phone1 || '9857039988';
+  const cleanWa = rawWa.replace(/[^0-9]/g, '');
+  const finalWa = cleanWa.startsWith('977') ? cleanWa : `977${cleanWa}`;
+
   const [activeTab, setActiveTab] = useState<'book' | 'track'>(initialTab);
 
   // Form fields
@@ -310,7 +318,7 @@ export const RepairBookingModal: React.FC<RepairBookingModalProps> = ({
       onSuccess();
     } catch (err) {
       console.error('Failed to submit repair booking', err);
-      alert('There was an issue saving your booking. Please try again or call us at 9857039988.');
+      alert(`There was an issue saving your booking. Please try again or call our lab at ${labHotline}.`);
     } finally {
       setIsSubmitting(false);
     }
@@ -417,9 +425,11 @@ export const RepairBookingModal: React.FC<RepairBookingModalProps> = ({
               </button>
             </div>
 
-            <div className="hidden sm:flex items-center space-x-1 text-[11px] text-slate-400">
+            <div className="flex items-center space-x-1 text-[11px] text-slate-400">
               <Phone className="w-3 h-3 text-emerald-400" />
-              <span>Lab Hotline: 9857039988</span>
+              <a href={`tel:${labHotline}`} className="hover:text-emerald-400 transition-colors font-medium">
+                <span>Lab Hotline: {labHotline}</span>
+              </a>
             </div>
           </div>
         </div>
@@ -437,7 +447,7 @@ export const RepairBookingModal: React.FC<RepairBookingModalProps> = ({
                   <Search className="w-3.5 h-3.5 text-indigo-600" />
                   <span>Enter Booking Reference ID or Phone Number</span>
                 </label>
-                <span className="text-[11px] text-slate-500">e.g. PMS-REP-2026-XXXX or 9857039988</span>
+                <span className="text-[11px] text-slate-500">e.g. PMS-REP-2026-XXXX or {labHotline}</span>
               </div>
 
               <form
@@ -716,9 +726,8 @@ export const RepairBookingModal: React.FC<RepairBookingModalProps> = ({
 
                 {/* Assigned Lab Technician & Direct Contact */}
                 {(() => {
-                  const storeSettings = DataStorageService.getStoreSettings();
-                  const techName = selectedTrackBooking.technicianName || storeSettings.technicianName || 'Er. Ramesh Pandey (Chief Lab Specialist)';
-                  const techPhone = selectedTrackBooking.technicianPhone || storeSettings.technicianPhone || storeSettings.phone1 || '9857039988';
+                  const techName = selectedTrackBooking.technicianName || currentSettings.technicianName || 'Er. Ramesh Pandey (Chief Lab Specialist)';
+                  const techPhone = selectedTrackBooking.technicianPhone || currentSettings.technicianPhone || currentSettings.phone1 || labHotline;
                   const cleanPhone = techPhone.replace(/\D/g, '');
 
                   return (
@@ -766,12 +775,12 @@ export const RepairBookingModal: React.FC<RepairBookingModalProps> = ({
                 <div className="p-4 bg-emerald-50 rounded-2xl border border-emerald-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
                   <div>
                     <span className="font-bold text-emerald-950 block">Need an immediate status update?</span>
-                    <span className="text-emerald-800 text-[11px]">Chat directly with Pandey Mobile Lab on WhatsApp or call our hotline.</span>
+                    <span className="text-emerald-800 text-[11px]">Chat directly with {currentSettings.storeName} Lab on WhatsApp or call our hotline.</span>
                   </div>
 
                   <div className="flex items-center gap-2 w-full sm:w-auto">
                     <a
-                      href={`https://wa.me/9779857039988?text=Namaste%20Pandey%20Mobile%20Store%2C%20I%20am%20inquiring%20about%20my%20repair%20status%20for%20Booking%20ID%3A%20${selectedTrackBooking.bookingCode}%20(${encodeURIComponent(selectedTrackBooking.mobileBrand + ' ' + selectedTrackBooking.mobileModel)}).`}
+                      href={`https://wa.me/${finalWa}?text=Namaste%20${encodeURIComponent(currentSettings.storeName)}%2C%20I%20am%20inquiring%20about%20my%20repair%20status%20for%20Booking%20ID%3A%20${selectedTrackBooking.bookingCode}%20(${encodeURIComponent(selectedTrackBooking.mobileBrand + ' ' + selectedTrackBooking.mobileModel)}).`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex-1 sm:flex-none px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl flex items-center justify-center space-x-1.5 transition shadow-xs"
@@ -781,11 +790,11 @@ export const RepairBookingModal: React.FC<RepairBookingModalProps> = ({
                     </a>
 
                     <a
-                      href="tel:9857039988"
+                      href={`tel:${labHotline}`}
                       className="flex-1 sm:flex-none px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl flex items-center justify-center space-x-1.5 transition"
                     >
                       <Phone className="w-4 h-4 text-emerald-400" />
-                      <span>9857039988</span>
+                      <span>{labHotline}</span>
                     </a>
                   </div>
                 </div>
@@ -812,11 +821,11 @@ export const RepairBookingModal: React.FC<RepairBookingModalProps> = ({
                     Schedule New Repair
                   </button>
                   <a
-                    href="tel:9857039988"
+                    href={`tel:${labHotline}`}
                     className="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold text-xs rounded-xl transition flex items-center space-x-1"
                   >
                     <Phone className="w-3.5 h-3.5 text-emerald-600" />
-                    <span>Call Lab: 9857039988</span>
+                    <span>Call Lab: {labHotline}</span>
                   </a>
                 </div>
               </div>
@@ -910,7 +919,7 @@ export const RepairBookingModal: React.FC<RepairBookingModalProps> = ({
                   <span>Track Live Status Now</span>
                 </button>
                 <a
-                  href={`https://wa.me/9779857039988?text=Namaste%20Pandey%20Mobile%20Store%2C%20I%20have%20booked%20a%20repair%20for%20my%20${encodeURIComponent(createdBooking.mobileBrand + ' ' + createdBooking.mobileModel)}%20(Booking%20ID%3A%20${createdBooking.bookingCode}).%20Issue%3A%20${encodeURIComponent(createdBooking.problemType)}.`}
+                  href={`https://wa.me/${finalWa}?text=Namaste%20${encodeURIComponent(currentSettings.storeName)}%2C%20I%20have%20booked%20a%20repair%20for%20my%20${encodeURIComponent(createdBooking.mobileBrand + ' ' + createdBooking.mobileModel)}%20(Booking%20ID%3A%20${createdBooking.bookingCode}).%20Issue%3A%20${encodeURIComponent(createdBooking.problemType)}.`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex-1 py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs sm:text-sm rounded-xl text-center shadow-md flex items-center justify-center space-x-2 transition-colors cursor-pointer"
@@ -929,7 +938,7 @@ export const RepairBookingModal: React.FC<RepairBookingModalProps> = ({
               </button>
 
               <p className="text-[11px] text-slate-400">
-                📍 Location: Pandey Mobile Store & Lab, Traffic Chowk, Butwal • Phone: 9857039988 / 9857039121
+                📍 Location: {currentSettings.storeName} & Lab, {currentSettings.address}, {currentSettings.city} • Phone: {labHotline}{currentSettings.phone2 ? ` / ${currentSettings.phone2}` : ''}
               </p>
             </div>
           ) : (
@@ -961,7 +970,7 @@ export const RepairBookingModal: React.FC<RepairBookingModalProps> = ({
                     <input
                       type="tel"
                       required
-                      placeholder="e.g. 9857039988"
+                      placeholder="e.g. 98XXXXXXXX"
                       value={phoneNumber}
                       onChange={(e) => setPhoneNumber(e.target.value)}
                       className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs focus:bg-white focus:ring-2 focus:ring-indigo-500/20 font-mono"

@@ -124,8 +124,8 @@ export const ProductSection: React.FC<ProductSectionProps> = ({
               </p>
             </div>
             <div className="pt-2 flex flex-wrap items-center justify-center gap-2 text-xs text-slate-500">
-              <span className="px-3 py-1 bg-slate-100 rounded-full font-medium">📍 Traffic Chowk, Butwal</span>
-              <span className="px-3 py-1 bg-slate-100 rounded-full font-medium">📞 +977 9857039121</span>
+              <span className="px-3 py-1 bg-slate-100 rounded-full font-medium">📍 {storeSettings?.address || 'Traffic Chowk'}, {storeSettings?.city || 'Butwal'}</span>
+              <span className="px-3 py-1 bg-slate-100 rounded-full font-medium">📞 {storeSettings?.phone1 || '9857039988'}</span>
             </div>
           </div>
         ) : filteredProducts.length === 0 ? (

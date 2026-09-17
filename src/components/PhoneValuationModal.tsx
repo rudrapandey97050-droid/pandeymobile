@@ -1052,35 +1052,46 @@ export const PhoneValuationModal: React.FC<PhoneValuationModalProps> = ({
                 </div>
               </div>
 
-              {/* Next Steps Guide */}
-              <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 text-left max-w-md mx-auto space-y-2 text-xs text-slate-700">
-                <div className="font-bold text-slate-900 flex items-center space-x-2">
-                  <Building2 className="w-4 h-4 text-indigo-600" />
-                  <span>Next Steps: Visit Our Store</span>
-                </div>
-                <p>1. Bring your phone, charger and valid ID to <strong>Pandey Mobile Store, Traffic Chowk, Butwal</strong>.</p>
-                <p>2. Show your <strong>Valuation ID ({submittedValuation.valuationId})</strong> at our counter.</p>
-                <p>3. Our technician will perform a 10-minute physical inspection and provide your instant final cash or exchange trade-in amount.</p>
-              </div>
+              {(() => {
+                const storeSettings = DataStorageService.getStoreSettings();
+                const rawWa = storeSettings.whatsapp || storeSettings.phone1 || '9857039988';
+                const cleanWa = rawWa.replace(/[^0-9]/g, '');
+                const finalWa = cleanWa.startsWith('977') ? cleanWa : `977${cleanWa}`;
 
-              {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
-                <a
-                  href={`https://wa.me/9779857039988?text=Hello%20Pandey%20Mobile%20Store%2C%20I%20have%20submitted%20a%20valuation%20request%20for%20my%20${encodeURIComponent(submittedValuation.phoneBrand + ' ' + submittedValuation.phoneModel)}.%20My%20Valuation%20ID%20is%20${submittedValuation.valuationId}.`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full sm:w-auto px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-sm transition-colors shadow-md flex items-center justify-center space-x-2"
-                >
-                  <span>Chat on WhatsApp</span>
-                </a>
-                <button
-                  type="button"
-                  onClick={onClose}
-                  className="w-full sm:w-auto px-6 py-3 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold rounded-xl text-sm transition-colors"
-                >
-                  Done & Back to Store
-                </button>
-              </div>
+                return (
+                  <>
+                    {/* Next Steps Guide */}
+                    <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 text-left max-w-md mx-auto space-y-2 text-xs text-slate-700">
+                      <div className="font-bold text-slate-900 flex items-center space-x-2">
+                        <Building2 className="w-4 h-4 text-indigo-600" />
+                        <span>Next Steps: Visit Our Store</span>
+                      </div>
+                      <p>1. Bring your phone, charger and valid ID to <strong>{storeSettings.storeName}, {storeSettings.address}, {storeSettings.city}</strong>.</p>
+                      <p>2. Show your <strong>Valuation ID ({submittedValuation.valuationId})</strong> at our counter.</p>
+                      <p>3. Our technician will perform a 10-minute physical inspection and provide your instant final cash or exchange trade-in amount.</p>
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+                      <a
+                        href={`https://wa.me/${finalWa}?text=Hello%20${encodeURIComponent(storeSettings.storeName)}%2C%20I%20have%20submitted%20a%20valuation%20request%20for%20my%20${encodeURIComponent(submittedValuation.phoneBrand + ' ' + submittedValuation.phoneModel)}.%20My%20Valuation%20ID%20is%20${submittedValuation.valuationId}.`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full sm:w-auto px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-sm transition-colors shadow-md flex items-center justify-center space-x-2"
+                      >
+                        <span>Chat on WhatsApp</span>
+                      </a>
+                      <button
+                        type="button"
+                        onClick={onClose}
+                        className="w-full sm:w-auto px-6 py-3 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold rounded-xl text-sm transition-colors"
+                      >
+                        Done & Back to Store
+                      </button>
+                    </div>
+                  </>
+                );
+              })()}
 
             </div>
           )}

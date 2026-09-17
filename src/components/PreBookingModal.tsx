@@ -43,6 +43,11 @@ export const PreBookingModal: React.FC<PreBookingModalProps> = ({
   const [submittedBooking, setSubmittedBooking] = useState<PreBookingRequest | null>(null);
   const [errorMsg, setErrorMsg] = useState('');
 
+  const storeSettings = DataStorageService.getStoreSettings();
+  const rawWa = storeSettings.whatsapp || storeSettings.phone1 || '9857039988';
+  const cleanWa = rawWa.replace(/[^0-9]/g, '');
+  const finalWa = cleanWa.startsWith('977') ? cleanWa : `977${cleanWa}`;
+
   // Synchronize selected model when modal opens
   useEffect(() => {
     if (isOpen) {
@@ -217,7 +222,7 @@ export const PreBookingModal: React.FC<PreBookingModalProps> = ({
 
               <div className="pt-2 flex flex-col sm:flex-row gap-3 justify-center">
                 <a
-                  href={`https://wa.me/9779857039401?text=${encodeURIComponent(`Namaste Pandey Mobile Store, I have submitted a pre-booking (Code: ${submittedBooking.bookingCode}) for ${submittedBooking.modelName}. Please confirm my reservation status.`)}`}
+                  href={`https://wa.me/${finalWa}?text=${encodeURIComponent(`Namaste ${storeSettings.storeName}, I have submitted a pre-booking (Code: ${submittedBooking.bookingCode}) for ${submittedBooking.modelName}. Please confirm my reservation status.`)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center justify-center space-x-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-md transition-colors"

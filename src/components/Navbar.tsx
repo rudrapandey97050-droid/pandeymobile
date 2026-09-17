@@ -1044,10 +1044,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                     <p className="text-[#86868b]">Certified Master Technicians</p>
                     <div className="pt-3 border-t border-[#333336] text-[12px]">
                       <a
-                        href={`tel:${storeSettings.phone1}`}
+                        href={`tel:${storeSettings.technicianPhone || storeSettings.phone1}`}
                         className="text-white hover:underline block"
                       >
-                        Call Lab Hotline: {storeSettings.phone1}
+                        Call Lab Hotline: {storeSettings.technicianPhone || storeSettings.phone1}
                       </a>
                     </div>
                   </div>
@@ -1312,11 +1312,11 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             {/* Quick Contact */}
             <div className="pt-2 text-xs text-[#86868b] space-y-2">
-              <p className="text-white font-semibold">Pandey Mobile Store, Butwal</p>
-              <p>Traffic Chowk, Butwal, Lumbini Province</p>
+              <p className="text-white font-semibold">{storeSettings.storeName}</p>
+              <p>{storeSettings.address}, {storeSettings.city}</p>
               <p>Hotline: {storeSettings.phone1}</p>
               <a
-                href={`https://wa.me/${storeSettings.whatsapp}`}
+                href={`https://wa.me/${(storeSettings.whatsapp || storeSettings.phone1 || '').replace(/\D/g, '').startsWith('977') ? (storeSettings.whatsapp || storeSettings.phone1 || '').replace(/\D/g, '') : `977${(storeSettings.whatsapp || storeSettings.phone1 || '').replace(/\D/g, '')}`}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-block pt-2 text-emerald-400 font-bold"
