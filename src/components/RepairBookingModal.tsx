@@ -23,8 +23,7 @@ import {
   RefreshCw,
   ExternalLink,
   ChevronRight,
-  Info,
-  Pencil
+  Info
 } from 'lucide-react';
 import { DataStorageService } from '../services/dataStorage.ts';
 import { RepairBooking, RepairStatus, StoreSettings } from '../types.ts';
@@ -221,34 +220,6 @@ export const RepairBookingModal: React.FC<RepairBookingModalProps> = ({
   const [submitted, setSubmitted] = useState(false);
   const [createdBooking, setCreatedBooking] = useState<RepairBooking | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  // Lab Hotline Quick Edit State
-  const [isEditingHotline, setIsEditingHotline] = useState(false);
-  const [hotlineInput, setHotlineInput] = useState(labHotline);
-  const [saveHotlineSuccess, setSaveHotlineSuccess] = useState(false);
-
-  useEffect(() => {
-    setHotlineInput(labHotline);
-  }, [labHotline]);
-
-  const handleSaveHotline = () => {
-    const trimmed = hotlineInput.trim();
-    if (!trimmed) return;
-    try {
-      const existing = DataStorageService.getStoreSettings();
-      DataStorageService.saveStoreSettings({
-        ...existing,
-        technicianPhone: trimmed,
-        ...(existing.phone1 === labHotline ? { phone1: trimmed } : {})
-      });
-      setSaveHotlineSuccess(true);
-      setTimeout(() => setSaveHotlineSuccess(false), 2500);
-      setIsEditingHotline(false);
-      onSuccess();
-    } catch (err) {
-      console.error('Failed to update hotline', err);
-    }
-  };
 
   // ----------------------------------------------------
   // TRACKING STATE
@@ -454,70 +425,12 @@ export const RepairBookingModal: React.FC<RepairBookingModalProps> = ({
               </button>
             </div>
 
-            {isEditingHotline ? (
-              <div className="flex items-center space-x-1.5 bg-slate-800/90 px-2.5 py-1 rounded-xl border border-slate-700 shadow-inner">
-                <Phone className="w-3 h-3 text-emerald-400 shrink-0" />
-                <input
-                  type="text"
-                  value={hotlineInput}
-                  onChange={(e) => setHotlineInput(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') handleSaveHotline();
-                    if (e.key === 'Escape') {
-                      setHotlineInput(labHotline);
-                      setIsEditingHotline(false);
-                    }
-                  }}
-                  placeholder="e.g. 9857039401"
-                  autoFocus
-                  className="w-28 sm:w-32 px-2 py-0.5 bg-slate-900 border border-slate-600 rounded-lg text-xs text-white font-mono focus:outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400"
-                />
-                <button
-                  type="button"
-                  onClick={handleSaveHotline}
-                  className="px-2 py-0.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-[10px] font-bold transition-colors cursor-pointer shadow-xs"
-                  title="Save Hotline Number"
-                >
-                  Save
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setHotlineInput(labHotline);
-                    setIsEditingHotline(false);
-                  }}
-                  className="px-1.5 py-0.5 text-slate-400 hover:text-white rounded-lg text-[10px] cursor-pointer"
-                  title="Cancel"
-                >
-                  ✕
-                </button>
-              </div>
-            ) : (
-              <div className="flex items-center space-x-1.5 text-[11px] text-slate-400">
-                <Phone className="w-3 h-3 text-emerald-400 shrink-0" />
-                <a href={`tel:${labHotline}`} className="hover:text-emerald-400 transition-colors font-medium">
-                  <span>Lab Hotline: {labHotline}</span>
-                </a>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setHotlineInput(labHotline);
-                    setIsEditingHotline(true);
-                  }}
-                  className="inline-flex items-center space-x-1 px-1.5 py-0.5 rounded bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-emerald-300 transition-colors text-[10px] border border-slate-700/60 cursor-pointer ml-1"
-                  title="Click to edit hotline number"
-                >
-                  <Pencil className="w-2.5 h-2.5" />
-                  <span>Edit</span>
-                </button>
-                {saveHotlineSuccess && (
-                  <span className="text-[10px] text-emerald-400 font-semibold flex items-center space-x-0.5 ml-1">
-                    <Check className="w-2.5 h-2.5" />
-                    <span>Saved!</span>
-                  </span>
-                )}
-              </div>
-            )}
+            <div className="flex items-center space-x-1 text-[11px] text-slate-400">
+              <Phone className="w-3 h-3 text-emerald-400 shrink-0" />
+              <a href={`tel:${labHotline}`} className="hover:text-emerald-400 transition-colors font-medium">
+                <span>Lab Hotline: {labHotline}</span>
+              </a>
+            </div>
           </div>
         </div>
 
